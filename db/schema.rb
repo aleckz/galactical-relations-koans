@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150731124953) do
+ActiveRecord::Schema.define(version: 20150807145509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,21 +19,39 @@ ActiveRecord::Schema.define(version: 20150731124953) do
   create_table "asteroids", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "planet_id"
+  end
+
+  create_table "asteroids_planets", force: :cascade do |t|
   end
 
   create_table "moons", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "planet_id"
+    t.integer  "sun_id"
   end
 
+  add_index "moons", ["planet_id"], name: "index_moons_on_planet_id", using: :btree
+
   create_table "planets", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "sun_id"
+    t.integer  "asteroid_id"
+  end
+
+  add_index "planets", ["sun_id"], name: "index_planets_on_sun_id", using: :btree
+
+  create_table "planets_asteroids", force: :cascade do |t|
   end
 
   create_table "suns", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "moon_id"
   end
 
+  add_foreign_key "moons", "planets"
+  add_foreign_key "planets", "suns"
 end
